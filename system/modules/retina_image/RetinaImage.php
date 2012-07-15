@@ -32,28 +32,28 @@ class RetinaImage extends Controller
 
 	public function parseFrontendTemplateHook($strContent, $strTemplate)
 	{
-		if ($strTemplate == 'fe_page')
+		if (substr($strTemplate, 0, 3) == 'fe_')
 		{
 			$startPos = 0;
 			$endPos = 0;
-	
+
 			while (($startPos = strpos($strContent, '<img ', $endPos)) !== FALSE)
 			{
 				if (($endPos = strpos($strContent, '>', $startPos+1)) !== FALSE)
 				{
 					$strTag = substr($strContent, $startPos, $endPos-$startPos+1);
-	
+
 					if (preg_match('~ src=["\']([^"\']+)\.([a-zA-Z0-9]+)["\']~i', $strTag, $matches))
 					{
-						if (file_exists(TL_ROOT.'/'.$matches[1].'@2x.'.$matches[2]))
+						if (file_exists(TL_ROOT.'/'.urldecode($matches[1]).'@2x.'.$matches[2]))
 						{
 							$strTag = preg_replace('~( class=["\'][^"\']+)(["\'])~i', '$1 at2x$2', $strTag, 1, $count);
-							
+
 							if ($count == 0)
 							{
 								$strTag = str_replace('<img', '<img class="at2x"', $strTag);
 							}
-							
+
 							$strContent = substr($strContent, 0, $startPos).$strTag.substr($strContent, $endPos+1);
 						}
 					}
