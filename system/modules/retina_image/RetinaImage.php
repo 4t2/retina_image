@@ -30,6 +30,79 @@
 class RetinaImage extends Controller
 {
 
+	public function parseFrontendTemplateHook($strContent, $strTemplate)
+	{
+		if ($strTemplate == 'fe_page')
+		{
+			$startPos = 0;
+			$endPos = 0;
+	
+			while (($startPos = strpos($strContent, '<img ', $endPos)) !== FALSE)
+			{
+				if (($endPos = strpos($strContent, '>', $startPos+1)) !== FALSE)
+				{
+					$strTag = substr($strContent, $startPos, $endPos-$startPos+1);
+	
+					if (preg_match('~ src=["\']([^"\']+)\.([a-zA-Z0-9]+)["\']~i', $strTag, $matches))
+					{
+						if (file_exists(TL_ROOT.'/'.$matches[1].'@2x.'.$matches[2]))
+						{
+							$strTag = preg_replace('~( class=["\'][^"\']+)(["\'])~i', '$1 at2x$2', $strTag, 1, $count);
+							
+							if ($count == 0)
+							{
+								$strTag = str_replace('<img', '<img class="at2x"', $strTag);
+							}
+							
+							$strContent = substr($strContent, 0, $startPos).$strTag.substr($strContent, $endPos+1);
+						}
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		
+		return $strContent;
+	}
+/*
+	public function getContentElementHook($objElement, $strBuffer)
+	{
+		$startPos = 0;
+		$endPos = 0;
+
+		while (($startPos = strpos($strBuffer, '<img ', $endPos)) !== FALSE)
+		{
+			if (($endPos = strpos($strBuffer, '>', $startPos+1)) !== FALSE)
+			{
+				$strTag = substr($strBuffer, $startPos, $endPos-$startPos+1);
+
+				if (preg_match('~ src=["\']([^"\']+)\.([a-zA-Z0-9]+)["\']~i', $strTag, $matches))
+				{
+					if (file_exists(TL_ROOT.'/'.$matches[1].'@2x.'.$matches[2]))
+					{
+						$strTag = preg_replace('~( class=["\'][^"\']+)(["\'])~i', '$1 at2x$2', $strTag, 1, $count);
+						
+						if ($count == 0)
+						{
+							$strTag = str_replace('<img', '<img class="at2x"', $strTag);
+						}
+						
+						$strBuffer = substr($strBuffer, 0, $startPos).$strTag.substr($strBuffer, $endPos+1);
+					}
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		return $strBuffer;
+	}
+*/
 	public function getImageHook($image, $width, $height, $mode, $strCacheName, $objFile, $target)
 	{
 		/* get size of original image */

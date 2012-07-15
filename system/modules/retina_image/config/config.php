@@ -28,6 +28,8 @@
  */
 
 
+$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][] = array('RetinaImage', 'parseFrontendTemplateHook');
+#$GLOBALS['TL_HOOKS']['getContentElement'][] = array('RetinaImage', 'getContentElementHook');
 $GLOBALS['TL_HOOKS']['getImage'][] = array('RetinaImage', 'getImageHook');
 
 
@@ -37,5 +39,5 @@ if (TL_MODE == 'FE')
 	{
 		$GLOBALS['TL_JAVASCRIPT'] = array();
 	}
-	$GLOBALS['TL_JAVASCRIPT'][] = strstr(dirname(__DIR__), 'system/modules').'/scripts/retina.js.php';
+	$GLOBALS['TL_JAVASCRIPT'][] = strstr(dirname(__DIR__), 'system/modules').'/scripts/retina.js';
 }
