@@ -28,8 +28,7 @@
  */
 
 
-$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][] = array('RetinaImage', 'parseFrontendTemplateHook');
-#$GLOBALS['TL_HOOKS']['getContentElement'][] = array('RetinaImage', 'getContentElementHook');
+$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'outputFrontendTemplateHook');
 $GLOBALS['TL_HOOKS']['getImage'][] = array('RetinaImage', 'getImageHook');
 
 
