@@ -27,7 +27,6 @@
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
 
-
 $GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'outputFrontendTemplateHook');
 $GLOBALS['TL_HOOKS']['getImage'][] = array('RetinaImage', 'getImageHook');
 
@@ -38,5 +37,5 @@ if (TL_MODE == 'FE')
 	{
 		$GLOBALS['TL_JAVASCRIPT'] = array();
 	}
-	$GLOBALS['TL_JAVASCRIPT'][] = strstr(dirname(__DIR__), 'system/modules').'/scripts/retina.js';
+	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/retina_image/scripts/retina.js';
 }
