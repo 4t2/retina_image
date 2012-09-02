@@ -10,7 +10,7 @@ function initReady(fn)
 	}
 	else // IE
 	{
-		document.onreadystatechange = function(){readyState(fn)}
+		document.onreadystatechange = function() {readyState(fn)}
 	}
 }
 
@@ -18,29 +18,49 @@ function initReady(fn)
 function readyState(func)
 {
 	// DOM is ready
-	if(document.readyState == "interactive" || document.readyState == "complete")
+	if (document.readyState == "interactive" || document.readyState == "complete")
 	{
 		func();
 	}
 }
 
-//window.onload = function()
 window.onDomReady(function()
 {
 	var root = (typeof exports == 'undefined' ? window : exports);
 	
 	if (root.devicePixelRatio > 1)
 	{
-		var i, len, src, images = document.getElementsByTagName("img");
-
-		for (i = 0, len = images.length; i < len; i++)
+		if (document.getElementsByClassName)
 		{
-			_src = images[i].getAttribute('src');
-			_class = images[i].getAttribute('class');
+			var i, len, el = document.getElementsByClassName("at2x");
 
-			if ((_class != null && _class != "" && _class.indexOf("at2x") > -1))
+			for (i = 0, len = el.length; i < len; i++)
 			{
-				images[i].setAttribute('src', _src.replace(/(\.[a-zA-Z]+)$/, '@2x$1'));
+				_src = el[i].getAttribute('src');
+
+				if (_src != null && _src != "")
+				{
+					el[i].setAttribute('src', _src.replace(/(\.[a-z]+)$/i, '@2x$1'));
+				}
+				else if (el[i].style.backgroundImage != null && el[i].style.backgroundImage != "" && el[i].style.backgroundSize != null && el[i].style.backgroundSize != "")
+				{
+					el[i].style.backgroundImage = el[i].style.backgroundImage.replace(/(\.[a-z]+\)?)$/i, '@2x$1');
+				}
+			}
+		}
+		else
+		{
+			var i, len, images = document.getElementsByTagName("img");
+	
+			for (i = 0, len = images.length; i < len; i++)
+			{
+				_src = images[i].getAttribute('src');
+				_class = images[i].getAttribute('class');
+	
+				if ((_class != null && _class != "" && _class.indexOf("at2x") > -1))
+				{
+					images[i].setAttribute('src', _src.replace(/(\.[a-zA-Z]+)$/, '@2x$1'));
+				}
 			}
 		}
 	}
