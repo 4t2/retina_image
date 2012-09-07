@@ -27,7 +27,7 @@ function readyState(func)
 window.onDomReady(function()
 {
 	var root = (typeof exports == 'undefined' ? window : exports);
-	
+
 	if (root.devicePixelRatio > 1)
 	{
 		if (document.getElementsByClassName)
@@ -45,6 +45,10 @@ window.onDomReady(function()
 				else if (el[i].style.backgroundImage != null && el[i].style.backgroundImage != "" && el[i].style.backgroundSize != null && el[i].style.backgroundSize != "")
 				{
 					el[i].style.backgroundImage = el[i].style.backgroundImage.replace(/(\.[a-z]+\)?)$/i, '@2x$1');
+				}
+				else if (getStyle(el[i], "background-image") != "" && getStyle(el[i], "background-size") != "")
+				{
+					el[i].style.backgroundImage = getStyle(el[i], "background-image").replace(/(\.[a-z]+\)?)$/i, '@2x$1');
 				}
 			}
 		}
@@ -65,3 +69,18 @@ window.onDomReady(function()
 		}
 	}
 });
+
+// http://stackoverflow.com/questions/11799410/javascript-only-recognizising-inline-style-and-not-style-set-in-head
+function getStyle(elem, style)
+{
+	var a = window.getComputedStyle, b = elem.currentStyle;
+
+	if (a)
+	{
+		return a(elem).getPropertyValue(style);
+	}
+	else if (b)
+	{
+		return b[style];
+	}
+}
