@@ -38,7 +38,7 @@ if (TL_MODE == 'FE')
 	{
 		$GLOBALS['TL_JAVASCRIPT'] = array();
 	}
-	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/retina_image/assets/scripts/retina.js';
+	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/retina_image/assets/scripts/retina.js|static';
 
 	# PHP 5.3 only
 	#$GLOBALS['TL_JAVASCRIPT'][] = strstr(dirname(__DIR__), 'system/modules').'/scripts/retina.js';
