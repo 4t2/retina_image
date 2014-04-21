@@ -26,6 +26,18 @@ function readyState(func)
 
 window.onDomReady(function()
 {
+	retinaImages();
+});
+
+// see https://developer.apple.com/library/safari/documentation/NetworkingInternet/Conceptual/SafariImageDeliveryBestPractices/ServingImagestoRetinaDisplays/ServingImagestoRetinaDisplays.html
+if (window.matchMedia != null && window.matchMedia != undefined)
+{
+	window.matchMedia('(-webkit-device-pixel-ratio:1)').addListener(retinaImages);
+}
+
+
+function retinaImages()
+{
 	var root = (typeof exports == 'undefined' ? window : exports);
 
 	if (root.devicePixelRatio > 1)
@@ -68,7 +80,23 @@ window.onDomReady(function()
 			}
 		}
 	}
-});
+	else
+	{
+		var i, len, images = document.getElementsByTagName("img");
+
+		for (i = 0, len = images.length; i < len; i++)
+		{
+			_src = images[i].getAttribute('src');
+			_class = images[i].getAttribute('class');
+
+			if ((_class != null && _class != "" && _class.indexOf("at2x") > -1))
+			{
+				images[i].setAttribute('src', _src.replace(/@2x/, ''));
+			}
+		}
+	}
+}
+
 
 // http://stackoverflow.com/questions/11799410/javascript-only-recognizising-inline-style-and-not-style-set-in-head
 function getStyle(elem, style)
