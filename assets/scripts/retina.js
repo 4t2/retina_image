@@ -26,7 +26,7 @@ function readyState(func)
 
 window.onDomReady(function()
 {
-	retinaImages();
+	retinaImages(false);
 });
 
 // see https://developer.apple.com/library/safari/documentation/NetworkingInternet/Conceptual/SafariImageDeliveryBestPractices/ServingImagestoRetinaDisplays/ServingImagestoRetinaDisplays.html
@@ -36,8 +36,9 @@ if (window.matchMedia != null && window.matchMedia != undefined)
 }
 
 
-function retinaImages()
+function retinaImages(ratioChanged)
 {
+	ratioChanged = typeof ratioChanged !== 'undefined' ? ratioChanged : true;
 	var root = (typeof exports == 'undefined' ? window : exports);
 
 	if (root.devicePixelRatio > 1)
@@ -80,18 +81,39 @@ function retinaImages()
 			}
 		}
 	}
-	else
+	else if (ratioChanged)
 	{
-		var i, len, images = document.getElementsByTagName("img");
-
-		for (i = 0, len = images.length; i < len; i++)
+		if (document.getElementsByClassName)
 		{
-			_src = images[i].getAttribute('src');
-			_class = images[i].getAttribute('class');
-
-			if ((_class != null && _class != "" && _class.indexOf("at2x") > -1))
+			var i, len, el = document.getElementsByClassName("at2x");
+			
+			for (i = 0, len = el.length; i < len; i++)
 			{
-				images[i].setAttribute('src', _src.replace(/@2x/, ''));
+				_src = el[i].getAttribute('src');
+
+				if (_src != null && _src != "")
+				{
+					el[i].setAttribute('src', _src.replace(/@2x/, ''));
+				}
+				else if (el[i].style.backgroundImage != null && el[i].style.backgroundImage != "")
+				{
+					el[i].style.backgroundImage = el[i].style.backgroundImage.replace(/@2x/, '');
+				}
+			}
+		}
+		else
+		{
+			var i, len, images = document.getElementsByTagName("img");
+
+			for (i = 0, len = images.length; i < len; i++)
+			{
+				_src = images[i].getAttribute('src');
+				_class = images[i].getAttribute('class');
+
+				if ((_class != null && _class != "" && _class.indexOf("at2x") > -1))
+				{
+					images[i].setAttribute('src', _src.replace(/@2x/, ''));
+				}
 			}
 		}
 	}
