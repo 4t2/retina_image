@@ -21,8 +21,8 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2012
- * @author     Mario Müller <http://www.lingo4u.de/>
+ * @copyright  Lingo4you 2014
+ * @author     Mario Müller <http://www.lingolia.com/>
  * @package    RetinaImage
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
@@ -30,12 +30,16 @@
 class RetinaImage extends Controller
 {
 
-	public function outputFrontendTemplateHook($strContent, $strTemplate)
+	public function modifyFrontendPageHook($strContent, $strTemplate)
 	{
 		if (substr($strTemplate, 0, 3) == 'fe_')
 		{
 			$strContent = $this->parseHtmlTags($strContent);
-			$strContent = $this->parseInsertTags($strContent);
+
+			if (version_compare(VERSION, '3.1', '<'))
+			{
+				$strContent = $this->parseInsertTags($strContent);
+			}
 		}
 		
 		return $strContent;
@@ -54,7 +58,7 @@ class RetinaImage extends Controller
 			{
 				$strTag = substr($strContent, $startPos, $endPos-$startPos+2);
 
-				// skip if there are noch params given
+				// skip if there are no params given
 				if (strpos($strTag, '?') === FALSE)
 				{
 					continue;
@@ -141,6 +145,8 @@ class RetinaImage extends Controller
 							$strTag = str_replace('<img', '<img class="at2x"', $strTag);
 						}
 						
+#						$strTag = str_replace('<img', '<img onload="this.style.display=\'none\'"', $strTag);
+
 						$widthPos = strpos($strTag, 'width=');
 						$heightPos = strpos($strTag, 'height=');
 
@@ -214,6 +220,7 @@ class RetinaImage extends Controller
 		return $strBuffer;
 	}
 */
+
 	public function getImageHook($image, $width, $height, $mode, $strCacheName, $objFile, $target)
 	{
 		if ($target)

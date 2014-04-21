@@ -21,14 +21,23 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Lingo4you 2012
- * @author     Mario Müller <http://www.lingo4u.de/>
+ * @copyright  Lingo4you 2014
+ * @author     Mario Müller <http://www.lingolia.com/>
  * @package    RetinaImage
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  */
 
 
-$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'outputFrontendTemplateHook');
+if (version_compare(VERSION, '3.1', '<'))
+{
+	$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'modifyFrontendPageHook');
+}
+// see https://github.com/4t2/retina_image/issues/1
+else
+{
+	$GLOBALS['TL_HOOKS']['modifyFrontendPage'][] = array('RetinaImage', 'modifyFrontendPageHook');
+}
+
 $GLOBALS['TL_HOOKS']['getImage'][] = array('RetinaImage', 'getImageHook');
 
 
@@ -38,7 +47,8 @@ if (TL_MODE == 'FE')
 	{
 		$GLOBALS['TL_JAVASCRIPT'] = array();
 	}
-	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/retina_image/assets/scripts/retina.js';
+
+	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/retina_image/assets/scripts/retina.js|static';
 
 	# PHP 5.3 only
 	#$GLOBALS['TL_JAVASCRIPT'][] = strstr(dirname(__DIR__), 'system/modules').'/scripts/retina.js';

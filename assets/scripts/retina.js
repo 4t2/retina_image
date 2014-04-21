@@ -33,7 +33,7 @@ window.onDomReady(function()
 		if (document.getElementsByClassName)
 		{
 			var i, len, el = document.getElementsByClassName("at2x");
-
+			
 			for (i = 0, len = el.length; i < len; i++)
 			{
 				_src = el[i].getAttribute('src');
