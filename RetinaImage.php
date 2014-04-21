@@ -35,11 +35,18 @@ class RetinaImage extends Controller
 		if (substr($strTemplate, 0, 3) == 'fe_')
 		{
 			$strContent = $this->parseHtmlTags($strContent);
+		}
+		
+		return $strContent;
+	}
 
-			if (version_compare(VERSION, '3.1', '<'))
-			{
-				$strContent = $this->parseInsertTags($strContent);
-			}
+
+	public function outputFrontendTemplateHook($strContent, $strTemplate)
+	{
+		if (substr($strTemplate, 0, 3) == 'fe_')
+		{
+			$strContent = $this->parseHtmlTags($strContent);
+			$strContent = $this->parseInsertTags($strContent);
 		}
 		
 		return $strContent;

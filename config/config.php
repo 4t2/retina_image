@@ -30,7 +30,7 @@
 
 if (version_compare(VERSION, '3.1', '<'))
 {
-	$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'modifyFrontendPageHook');
+	$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'outputFrontendTemplateHook');
 }
 // see https://github.com/4t2/retina_image/issues/1
 else
