@@ -24,7 +24,7 @@ class RetinaImage extends Controller
 		{
 			$strContent = $this->parseHtmlTags($strContent);
 		}
-		
+
 		return $strContent;
 	}
 
@@ -36,7 +36,7 @@ class RetinaImage extends Controller
 			$strContent = $this->parseHtmlTags($strContent);
 			$strContent = $this->parseInsertTags($strContent);
 		}
-		
+
 		return $strContent;
 	}
 
@@ -147,7 +147,7 @@ class RetinaImage extends Controller
 						if ($widthPos === FALSE || $heightPos === FALSE)
 						{
 							$imageSize = getimagesize(TL_ROOT.'/'.rawurldecode($matches[1]).'.'.$matches[2]);
-							
+
 							if ($heightPos === FALSE)
 							{
 								$strTag = str_replace('<img', '<img height="'.$imageSize[1].'"', $strTag);
@@ -155,7 +155,7 @@ class RetinaImage extends Controller
 
 							if ($widthPos === FALSE)
 							{
-								$strTag = str_replace('<img', '<img width="'.$imageSize[1].'"', $strTag);
+								$strTag = str_replace('<img', '<img width="'.$imageSize[0].'"', $strTag);
 							}
 						}
 
@@ -252,5 +252,67 @@ class RetinaImage extends Controller
 		$GLOBALS['TL_HOOKS']['getImage'][] = array('RetinaImage', 'getImageHook');
 
 		return;
+	}
+
+
+	public function replaceInsertTagsHook($strTag)
+	{
+		global $objPage;
+
+		$arrSplit = explode('::', $strTag);
+
+		if ($arrSplit[0] == 'svg')
+		{
+			if (!empty($arrSplit[1]))
+			{
+				$width = null;
+				$height = null;
+				$alt = '';
+				$class = '';
+
+				$arrTag = explode('?', $arrSplit[1]);
+
+				$strFile = $arrTag[0];
+
+				if (!empty($arrTag[1]))
+				{
+					$arrAttributes = explode('&', $arrTag[1]);
+
+					foreach ($arrAttributes as $attribute)
+					{
+						$arrValue = explode('=', $attribute);
+
+						if (count($arrValue) == 2)
+						{
+							switch ($arrValue[0])
+							{
+								case 'width':
+									$width = $arrValue[1];
+									break;
+								case 'height':
+									$height = $arrValue[1];
+									break;
+								case 'alt':
+									$alt = $arrValue[1];
+									break;
+								case 'class':
+									$class = $arrValue[1];
+									break;
+							}
+						}
+					}
+				}
+
+				$size = array($width, $height);
+
+				$size = self::_getSvgSize($strFile, $size);
+
+				$strReturn = '<img src="'.$strFile.'"'.($size[0]?' width="'.$size[0].'"':'').($size[1]?' height="'.$size[1].'"':'').($class?' class="'.$class.'"':'').($alt?' alt="'.$alt.'"':'').'>';
+
+				return $strReturn;
+			}
+		}
+
+		return false;
 	}
 }

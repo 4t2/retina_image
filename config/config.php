@@ -9,6 +9,7 @@
  */
 
 
+/* Hooks */
 if (version_compare(VERSION, '3.1', '<'))
 {
 	$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('RetinaImage', 'outputFrontendTemplateHook');
@@ -20,6 +21,9 @@ else
 }
 
 $GLOBALS['TL_HOOKS']['getImage'][] = array('RetinaImage', 'getImageHook');
+
+/* InsertTags */
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('RetinaImage', 'replaceInsertTagsHook');
 
 
 if (TL_MODE == 'FE')

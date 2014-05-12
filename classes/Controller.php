@@ -31,52 +31,9 @@ class Controller extends \Contao\Controller
 		{
 			$size = deserialize($arrItem['size']);
 
-			$svgFile = simplexml_load_file(TL_ROOT .'/'. $arrItem['singleSRC']);
+			$size = self::_getSvgSize($arrItem['singleSRC'], $size);
 
-			$ratio = 1;
-			$width = 0;
-			$height = 0;
-
-			if (isset($svgFile['viewBox']) && $svgFile['viewBox'] != '')
-			{
-				$viewBox = explode(' ', $svgFile['viewBox']);
-
-				$width = preg_replace('#^([\d]+).*$#', '$1', $viewBox[2]);
-				$height = preg_replace('#^([\d]+).*$#', '$1', $viewBox[3]);
-			}
-			elseif (isset($svgFile['width']) && isset($svgFile['height']))
-			{
-				$width = preg_replace('#^([\d]+).*$#', '$1', $svgFile['width']);
-				$height = preg_replace('#^([\d]+).*$#', '$1', $svgFile['height']);
-			}
-
-			if ($width > 0 && $height > 0)
-			{
-				$ratio = $width / $height;
-			}
-
-			if ($size[0] && $size[1])
-			{
-				// nothing do do
-			}
-			else
-			{
-				if (!$size[0] && !$size[1])
-				{
-					$size[0] = $width;
-					$size[1] = $height;
-				}
-				elseif (!$size[0])
-				{
-					$size[0] = round($size[1] * $ratio);
-				}
-				elseif (!$size[1])
-				{
-					$size[1] = round($size[0] / $ratio);
-				}
-
-				$arrItem['size'] = serialize($size);
-			}
+			$arrItem['size'] = serialize($size);
 
 			@parent::addImageToTemplate($objTemplate, $arrItem, $intMaxWidth, $strLightboxId);
 
@@ -99,7 +56,57 @@ class Controller extends \Contao\Controller
 		{
 			parent::addImageToTemplate($objTemplate, $arrItem, $intMaxWidth, $strLightboxId);
 		}
-
-		
 	}
+
+
+	protected static function _getSvgSize($strFile, $size)
+	{
+		$svgFile = simplexml_load_file(TL_ROOT .'/'. $strFile);
+
+		$ratio = 1;
+		$width = 0;
+		$height = 0;
+
+		if (isset($svgFile['viewBox']) && $svgFile['viewBox'] != '')
+		{
+			$viewBox = explode(' ', $svgFile['viewBox']);
+
+			$width = preg_replace('#^([\d]+).*$#', '$1', $viewBox[2]);
+			$height = preg_replace('#^([\d]+).*$#', '$1', $viewBox[3]);
+		}
+		elseif (isset($svgFile['width']) && isset($svgFile['height']))
+		{
+			$width = preg_replace('#^([\d]+).*$#', '$1', $svgFile['width']);
+			$height = preg_replace('#^([\d]+).*$#', '$1', $svgFile['height']);
+		}
+
+		if ($width > 0 && $height > 0)
+		{
+			$ratio = $width / $height;
+		}
+
+		if ($size[0] && $size[1])
+		{
+			// nothing do do
+		}
+		else
+		{
+			if (!$size[0] && !$size[1])
+			{
+				$size[0] = $width;
+				$size[1] = $height;
+			}
+			elseif (!$size[0])
+			{
+				$size[0] = round($size[1] * $ratio);
+			}
+			elseif (!$size[1])
+			{
+				$size[1] = round($size[0] / $ratio);
+			}
+		}
+
+		return $size;
+	}
+
 }
